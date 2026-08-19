@@ -1,3 +1,5 @@
+import { isNotNumber } from './utils.ts';
+
 interface Result {
   periodLength: number;
   trainingDays: number;
@@ -52,6 +54,24 @@ const calculateExercises = (
   };
 };
 
-console.log(
-  calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2)
-);
+const args = process.argv.slice(2);
+
+if (args.length < 2) {
+  throw new Error(
+    'Please provide a target and at least one exercise day.'
+  );
+}
+
+if (args.some(isNotNumber)) {
+  throw new Error(
+    'All arguments must be numbers.'
+  );
+}
+
+const target = Number(args[0]);
+
+const dailyHours = args
+  .slice(1)
+  .map(Number);
+
+console.log(calculateExercises(dailyHours, target));
