@@ -1,6 +1,6 @@
 import { isNotNumber } from './utils.ts';
 
-interface Result {
+export interface Result {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -10,7 +10,7 @@ interface Result {
   average: number;
 }
 
-const calculateExercises = (
+export const calculateExercises = (
   dailyHours: number[],
   target: number
 ): Result => {
@@ -40,7 +40,7 @@ const calculateExercises = (
     ratingDescription = 'not too bad but could be better';
   } else {
     rating = 1;
-    ratingDescription = 'you should exercise more';
+    ratingDescription = 'bad';
   }
 
   return {
@@ -54,24 +54,19 @@ const calculateExercises = (
   };
 };
 
+// Command-line functionality
 const args = process.argv.slice(2);
 
-if (args.length < 2) {
-  throw new Error(
-    'Please provide a target and at least one exercise day.'
-  );
+if (args.length >= 2) {
+  if (args.some(isNotNumber)) {
+    throw new Error('All arguments must be numbers.');
+  }
+
+  const target = Number(args[0]);
+
+  const dailyHours = args
+    .slice(1)
+    .map(Number);
+
+  console.log(calculateExercises(dailyHours, target));
 }
-
-if (args.some(isNotNumber)) {
-  throw new Error(
-    'All arguments must be numbers.'
-  );
-}
-
-const target = Number(args[0]);
-
-const dailyHours = args
-  .slice(1)
-  .map(Number);
-
-console.log(calculateExercises(dailyHours, target));
