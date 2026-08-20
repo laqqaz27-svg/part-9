@@ -1,4 +1,4 @@
-branches: [ xmain, xmaster ]name: Health app E2E Tests
+name: Health app E2E Tests
 
 on:
   push:
