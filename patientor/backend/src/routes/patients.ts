@@ -11,7 +11,19 @@ type ErrorResponse = {
   error: z.ZodIssue[] | string;
 };
 
-type PatientResponse = PatientWithoutSSN | ErrorResponse;
+type PatientResponse = Patient | ErrorResponse;
+
+router.get('/', (_req, res: Response<PatientWithoutSSN[]>) => {
+  res.json(
+    patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
+      id,
+      name,
+      dateOfBirth,
+      gender,
+      occupation
+    }))
+  );
+});
 
 router.post(
   '/',
@@ -29,15 +41,7 @@ router.post(
 
       patients.push(patient);
 
-      const patientWithoutSSN: PatientWithoutSSN = {
-        id: patient.id,
-        name: patient.name,
-        dateOfBirth: patient.dateOfBirth,
-        gender: patient.gender,
-        occupation: patient.occupation
-      };
-
-      res.json(patientWithoutSSN);
+      res.json(patient);
     } catch (error: unknown) {
       if (error instanceof z.ZodError) {
         res.status(400).send({
