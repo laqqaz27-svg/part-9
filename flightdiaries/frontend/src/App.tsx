@@ -83,8 +83,9 @@ function App() {
 
       <form onSubmit={addDiary}>
         <div>
-          date
+          date{' '}
           <input
+            type="date"
             value={newDiary.date}
             onChange={(event) =>
               setNewDiary({ ...newDiary, date: event.target.value })
@@ -93,33 +94,51 @@ function App() {
         </div>
 
         <div>
-          visibility
-          <input
-            value={newDiary.visibility}
-            onChange={(event) =>
-              setNewDiary({
-                ...newDiary,
-                visibility: event.target.value as Visibility,
-              })
-            }
-          />
+          visibility{' '}
+          {(['great', 'good', 'ok', 'poor'] as Visibility[]).map((option) => (
+            <label key={option}>
+              {option}{' '}
+              <input
+                type="radio"
+                name="visibility"
+                value={option}
+                checked={newDiary.visibility === option}
+                onChange={(event) =>
+                  setNewDiary({
+                    ...newDiary,
+                    visibility: event.target.value as Visibility,
+                  })
+                }
+              />
+            </label>
+          ))}
         </div>
 
         <div>
-          weather
-          <input
-            value={newDiary.weather}
-            onChange={(event) =>
-              setNewDiary({
-                ...newDiary,
-                weather: event.target.value as Weather,
-              })
-            }
-          />
+          weather{' '}
+          {(['sunny', 'rainy', 'cloudy', 'stormy', 'windy'] as Weather[]).map(
+            (option) => (
+              <label key={option}>
+                {option}{' '}
+                <input
+                  type="radio"
+                  name="weather"
+                  value={option}
+                  checked={newDiary.weather === option}
+                  onChange={(event) =>
+                    setNewDiary({
+                      ...newDiary,
+                      weather: event.target.value as Weather,
+                    })
+                  }
+                />
+              </label>
+            ),
+          )}
         </div>
 
         <div>
-          comment
+          comment{' '}
           <input
             value={newDiary.comment}
             onChange={(event) =>
