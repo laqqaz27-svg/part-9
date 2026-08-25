@@ -17,8 +17,13 @@ interface NewDiaryEntry {
   comment: string
 }
 
+interface BackendError {
+  error?: Array<{ message: string }>
+}
+
 function App() {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([])
+  const [error, setError] = useState<string | null>(null)
   const [newDiary, setNewDiary] = useState<NewDiaryEntry>({
     date: '',
     weather: 'sunny',
@@ -32,107 +37,107 @@ function App() {
       .then((data) => setDiaries(data))
   }, [])
 
-  const addDiary = (event: FormEvent<HTMLFormElement>) => {
+  const addDiary = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setError(null)
 
-    fetch('/api/diaries', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newDiary),
-    })
-      .then((response) => response.json() as Promise<DiaryEntry>)
-      .then((addedDiary) => {
-        setDiaries(diaries.concat(addedDiary))
-        setNewDiary({
-          date: '',
-          weather: 'sunny',
-          visibility: 'good',
-          comment: '',
-        })
+    try {
+      const response = await fetch('/api/diaries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newDiary),
       })
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as BackendError
+        const reason = errorData.error?.map((issue) => issue.message).join(', ')
+        throw new Error(reason ?? 'Adding diary failed')
+      }
+
+      const addedDiary = (await response.json()) as DiaryEntry
+      setDiaries((currentDiaries) => currentDiaries.concat(addedDiary))
+      setNewDiary({
+        date: '',
+        weather: 'sunny',
+        visibility: 'good',
+        comment: '',
+      })
+    } catch (caughtError: unknown) {
+      setError(
+        caughtError instanceof Error ? caughtError.message : 'Adding diary failed',
+      )
+    }
   }
 
   return (
     <main>
-      <h1>Flight diaries</h1>
+      <h1>Add new entry</h1>
+
+      {error && (
+        <p role="alert" style={{ color: 'red' }}>
+          Error: {error}
+        </p>
+      )}
 
       <form onSubmit={addDiary}>
         <div>
-          <label>
-            Date
-            <input
-              type="date"
-              value={newDiary.date}
-              onChange={(event) =>
-                setNewDiary({ ...newDiary, date: event.target.value })
-              }
-            />
-          </label>
+          date
+          <input
+            value={newDiary.date}
+            onChange={(event) =>
+              setNewDiary({ ...newDiary, date: event.target.value })
+            }
+          />
         </div>
 
         <div>
-          <label>
-            Weather
-            <select
-              value={newDiary.weather}
-              onChange={(event) =>
-                setNewDiary({
-                  ...newDiary,
-                  weather: event.target.value as Weather,
-                })
-              }
-            >
-              <option value="sunny">Sunny</option>
-              <option value="rainy">Rainy</option>
-              <option value="cloudy">Cloudy</option>
-              <option value="stormy">Stormy</option>
-              <option value="windy">Windy</option>
-            </select>
-          </label>
+          visibility
+          <input
+            value={newDiary.visibility}
+            onChange={(event) =>
+              setNewDiary({
+                ...newDiary,
+                visibility: event.target.value as Visibility,
+              })
+            }
+          />
         </div>
 
         <div>
-          <label>
-            Visibility
-            <select
-              value={newDiary.visibility}
-              onChange={(event) =>
-                setNewDiary({
-                  ...newDiary,
-                  visibility: event.target.value as Visibility,
-                })
-              }
-            >
-              <option value="great">Great</option>
-              <option value="good">Good</option>
-              <option value="ok">Okay</option>
-              <option value="poor">Poor</option>
-            </select>
-          </label>
+          weather
+          <input
+            value={newDiary.weather}
+            onChange={(event) =>
+              setNewDiary({
+                ...newDiary,
+                weather: event.target.value as Weather,
+              })
+            }
+          />
         </div>
 
         <div>
-          <label>
-            Comment
-            <textarea
-              value={newDiary.comment}
-              onChange={(event) =>
-                setNewDiary({ ...newDiary, comment: event.target.value })
-              }
-            />
-          </label>
+          comment
+          <input
+            value={newDiary.comment}
+            onChange={(event) =>
+              setNewDiary({ ...newDiary, comment: event.target.value })
+            }
+          />
         </div>
 
-        <button type="submit">Add diary</button>
+        <button type="submit">add</button>
       </form>
+
+      <h2>Diary entries</h2>
 
       {diaries.map((diary) => (
         <article key={diary.id}>
           <h2>{diary.date}</h2>
-          <p>Weather: {diary.weather}</p>
-          <p>Visibility: {diary.visibility}</p>
+          <p>visibility: {diary.visibility}</p>
+          <p>weather: {diary.weather}</p>
         </article>
       ))}
     </main>
