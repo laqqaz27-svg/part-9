@@ -1,12 +1,10 @@
 import express, { type Request, type Response } from 'express';
 import patients from '../../data/patients.ts';
 import type { Patient, PatientWithoutSSN } from '../types.ts';
+import parseNewPatient from '../utils.ts';
 import { v1 as uuid } from 'uuid';
 
 const router = express.Router();
-
-type PatientRequestBody = Omit<Patient, 'id'>;
-
 
 router.get('/', (_req, res: Response<PatientWithoutSSN[]>) => {
   res.json(
@@ -22,29 +20,26 @@ router.get('/', (_req, res: Response<PatientWithoutSSN[]>) => {
 
 router.post(
   '/',
-  (req: Request<unknown, PatientWithoutSSN, PatientRequestBody>, res: Response<PatientWithoutSSN>) => {
-  const { name, dateOfBirth, ssn, gender, occupation } = req.body;
+  (
+    req: Request<unknown, PatientWithoutSSN | string, unknown>,
+    res: Response<PatientWithoutSSN | string>
+  ) => {
+    try {
+      const newPatient = parseNewPatient(req.body);
+      const patient: Patient = {
+        id: uuid(),
+        ...newPatient
+      };
 
-  const newPatient = {
-    id: uuid(),
-    name,
-    dateOfBirth,
-    ssn,
-    gender,
-    occupation
-  };
+      patients.push(patient);
 
-  patients.push(newPatient);
-
-  const patientWithoutSSN: PatientWithoutSSN = {
-    id: newPatient.id,
-    name: newPatient.name,
-    dateOfBirth: newPatient.dateOfBirth,
-    gender: newPatient.gender,
-    occupation: newPatient.occupation
-  };
-
-  res.json(patientWithoutSSN);
+      const { id, name, dateOfBirth, gender, occupation } = patient;
+      res.json({ id, name, dateOfBirth, gender, occupation });
+    } catch (error: unknown) {
+      res.status(400).send(
+        error instanceof Error ? error.message : 'Something went wrong'
+      );
+    }
   }
 );
 
