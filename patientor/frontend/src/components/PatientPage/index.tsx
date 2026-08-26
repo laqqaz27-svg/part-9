@@ -3,10 +3,14 @@ import { useParams } from "react-router-dom";
 import { Female, Male, Transgender } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 
-import { Gender, Patient } from "../../types";
+import { Diagnosis, Gender, Patient } from "../../types";
 import patientService from "../../services/patients";
 
-const PatientPage = () => {
+interface Props {
+  diagnoses: Diagnosis[];
+}
+
+const PatientPage = ({ diagnoses }: Props) => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<Patient>();
 
@@ -48,7 +52,9 @@ const PatientPage = () => {
             {entry.diagnosisCodes && entry.diagnosisCodes.length > 0 ? (
               <ul>
                 {entry.diagnosisCodes.map((code) => (
-                  <li key={code}>{code}</li>
+                  <li key={code}>
+                    {code} {diagnoses.find((diagnosis) => diagnosis.code === code)?.name ?? "Unknown diagnosis"}
+                  </li>
                 ))}
               </ul>
             ) : null}
