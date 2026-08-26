@@ -5,6 +5,7 @@ import { Typography } from "@mui/material";
 
 import { Diagnosis, Gender, Patient } from "../../types";
 import patientService from "../../services/patients";
+import EntryDetails from "./EntryDetails";
 
 interface Props {
   diagnoses: Diagnosis[];
@@ -45,20 +46,7 @@ const PatientPage = ({ diagnoses }: Props) => {
         <Typography>No entries</Typography>
       ) : (
         patient.entries.map((entry) => (
-          <div key={entry.id}>
-            <Typography>
-              {entry.date} <em>{entry.description}</em>
-            </Typography>
-            {entry.diagnosisCodes && entry.diagnosisCodes.length > 0 ? (
-              <ul>
-                {entry.diagnosisCodes.map((code) => (
-                  <li key={code}>
-                    {code} {diagnoses.find((diagnosis) => diagnosis.code === code)?.name ?? "Unknown diagnosis"}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </div>
+          <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
         ))
       )}
     </div>
