@@ -24,12 +24,12 @@ const patients: Patient[] = [
     ]
   },
   {
-  id: "d2773abc-f723-11e9-8f0b-362b9e155667",
-  name: "Sarah Johnson",
-  dateOfBirth: "1992-03-15",
-  ssn: "150392-123A",
-  gender: "female",
-  occupation: "Software Developer",
+    id: "d2773598-f723-11e9-8f0b-362b9e155667",
+  name: "Martin Riggs",
+  dateOfBirth: "1970-04-25",
+  ssn: "250470-555L",
+  gender: "male",
+  occupation: "Technician",
   entries: [
     {
       id: 'd811e46e-70b3-4d90-b090-4535c7cf8fb1',

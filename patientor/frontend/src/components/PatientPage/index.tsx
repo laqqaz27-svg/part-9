@@ -52,7 +52,7 @@ const PatientPage = ({ diagnoses }: Props) => {
         ))
       )}
       <button type="button" onClick={() => setShowEntryForm(true)}>
-        Add New Entry
+        {showEntryForm ? "Entry Form" : "Add New Entry"}
       </button>
       {showEntryForm ? (
         <AddHealthCheckEntryForm
