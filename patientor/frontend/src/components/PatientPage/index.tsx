@@ -40,8 +40,19 @@ const PatientPage = () => {
       {patient.entries.length === 0 ? (
         <Typography>No entries</Typography>
       ) : (
-        patient.entries.map((entry, index) => (
-          <Typography key={index}>{JSON.stringify(entry)}</Typography>
+        patient.entries.map((entry) => (
+          <div key={entry.id}>
+            <Typography>
+              {entry.date} <em>{entry.description}</em>
+            </Typography>
+            {entry.diagnosisCodes && entry.diagnosisCodes.length > 0 ? (
+              <ul>
+                {entry.diagnosisCodes.map((code) => (
+                  <li key={code}>{code}</li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
         ))
       )}
     </div>
