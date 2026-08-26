@@ -13,6 +13,10 @@ type ErrorResponse = {
 
 type PatientResponse = Patient | ErrorResponse;
 
+router.get('/', (_req, res) => {
+  res.send(patients);
+});
+
 router.get('/:id', (req, res) => {
   const patient = patients.find(
     patient => patient.id === req.params.id
