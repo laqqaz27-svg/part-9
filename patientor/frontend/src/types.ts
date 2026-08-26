@@ -49,6 +49,12 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
 
+export type NewEntry = Entry extends infer EntryType
+  ? EntryType extends { id: string }
+    ? Omit<EntryType, "id">
+    : never
+  : never;
+
 export interface Patient {
   id: string;
   name: string;
