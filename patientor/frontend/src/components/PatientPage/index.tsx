@@ -57,6 +57,7 @@ const PatientPage = ({ diagnoses }: Props) => {
       {showEntryForm ? (
         <AddHealthCheckEntryForm
           patientId={patient.id}
+          diagnoses={diagnoses}
           onEntryAdded={(entry) => setPatient({
             ...patient,
             entries: patient.entries.concat(entry)
