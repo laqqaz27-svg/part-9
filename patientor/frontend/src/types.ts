@@ -18,12 +18,14 @@ interface BaseEntry {
   diagnosisCodes?: string[];
 }
 
-type HealthCheckRating = 0 | 1 | 2 | 3;
+export type HealthCheckRating = 0 | 1 | 2 | 3;
 
-interface HealthCheckEntry extends BaseEntry {
+export interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 }
+
+export type NewHealthCheckEntry = Omit<HealthCheckEntry, "id">;
 
 export interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";

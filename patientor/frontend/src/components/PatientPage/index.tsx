@@ -6,6 +6,7 @@ import { Typography } from "@mui/material";
 import { Diagnosis, Gender, Patient } from "../../types";
 import patientService from "../../services/patients";
 import EntryDetails from "./EntryDetails";
+import AddHealthCheckEntryForm from "./AddHealthCheckEntryForm";
 
 interface Props {
   diagnoses: Diagnosis[];
@@ -14,6 +15,7 @@ interface Props {
 const PatientPage = ({ diagnoses }: Props) => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<Patient>();
+  const [showEntryForm, setShowEntryForm] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -49,6 +51,19 @@ const PatientPage = ({ diagnoses }: Props) => {
           <EntryDetails key={entry.id} entry={entry} diagnoses={diagnoses} />
         ))
       )}
+      <button type="button" onClick={() => setShowEntryForm(true)}>
+        Add New Entry
+      </button>
+      {showEntryForm ? (
+        <AddHealthCheckEntryForm
+          patientId={patient.id}
+          onEntryAdded={(entry) => setPatient({
+            ...patient,
+            entries: patient.entries.concat(entry)
+          })}
+          onCancel={() => setShowEntryForm(false)}
+        />
+      ) : null}
     </div>
   );
 };
