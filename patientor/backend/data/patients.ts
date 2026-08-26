@@ -7,7 +7,8 @@ const patients: Patient[] = [
     dateOfBirth: '1986-07-09',
     ssn: '090786-122X',
     gender: 'male',
-    occupation: 'Software Developer'
+    occupation: 'Software Developer',
+    entries: []
   },
   {
   id: "d2773abc-f723-11e9-8f0b-362b9e155667",
@@ -15,7 +16,8 @@ const patients: Patient[] = [
   dateOfBirth: "1992-03-15",
   ssn: "150392-123A",
   gender: "female",
-  occupation: "Software Developer"
+  occupation: "Software Developer",
+  entries: []
 },
 {
   id: "d2773abd-f723-11e9-8f0b-362b9e155667",
@@ -23,7 +25,8 @@ const patients: Patient[] = [
   dateOfBirth: "1988-11-22",
   ssn: "221188-456B",
   gender: "male",
-  occupation: "Teacher"
+  occupation: "Teacher",
+  entries: []
 },
 {
   id: "d2773abe-f723-11e9-8f0b-362b9e155667",
@@ -31,7 +34,8 @@ const patients: Patient[] = [
   dateOfBirth: "1995-06-10",
   ssn: "100695-789C",
   gender: "female",
-  occupation: "Nurse"
+  occupation: "Nurse",
+  entries: []
 },
 {
   id: "d2773abf-f723-11e9-8f0b-362b9e155667",
@@ -39,7 +43,8 @@ const patients: Patient[] = [
   dateOfBirth: "1982-09-05",
   ssn: "050982-321D",
   gender: "male",
-  occupation: "Engineer"
+  occupation: "Engineer",
+  entries: []
 }
 
 ];

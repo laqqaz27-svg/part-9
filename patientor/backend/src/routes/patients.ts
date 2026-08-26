@@ -1,6 +1,6 @@
 import express, { type Request, type Response } from 'express';
 import patients from '../../data/patients.ts';
-import type { Patient, PatientWithoutSSN } from '../types.ts';
+import type { Patient } from '../types.ts';
 import { NewPatientSchema } from '../types.ts';
 import { v1 as uuid } from 'uuid';
 import { z } from 'zod';
@@ -13,16 +13,16 @@ type ErrorResponse = {
 
 type PatientResponse = Patient | ErrorResponse;
 
-router.get('/', (_req, res: Response<PatientWithoutSSN[]>) => {
-  res.json(
-    patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
-      id,
-      name,
-      dateOfBirth,
-      gender,
-      occupation
-    }))
+router.get('/:id', (req, res) => {
+  const patient = patients.find(
+    patient => patient.id === req.params.id
   );
+
+  if (patient) {
+    res.send(patient);
+  } else {
+    res.sendStatus(404);
+  }
 });
 
 router.post(
@@ -36,11 +36,11 @@ router.post(
 
       const patient: Patient = {
         id: uuid(),
-        ...newPatient
+        ...newPatient,
+        entries: []
       };
 
       patients.push(patient);
-
       res.json(patient);
     } catch (error: unknown) {
       if (error instanceof z.ZodError) {
